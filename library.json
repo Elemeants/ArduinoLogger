@@ -1,0 +1,21 @@
+{
+  "name": "Logger",
+  "keywords": "Serial, Logger, Arduino",
+  "description": "Arduino Library for Logging data and support for log level",
+  "authors":
+  [
+    {
+      "name": "Daniel Polanco",
+      "email": "Jdanypa@gmail.com",
+      "maintainer": true
+    }
+  ],
+  "version": "1.0",
+  "frameworks": "arduino",
+  "platforms": "*",
+  "repository":
+  { 
+    "type": "git",
+    "url": "https://github.com/Elemeants/ArduinoLogger.git"
+  }
+}
