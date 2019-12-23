@@ -1,94 +1,71 @@
 #include "Logger.h"
 
-// Local macro for prefix debug msg
-#define LOG_DEBUG_PREFIX_MSG "[DEBUG]: "
-// Local macro for prefix info msg
-#define LOG_INFO_PREFIX_MSG "[INFO ]: "
-// Local macro for prefix warn msg
-#define LOG_WARN_PREFIX_MSG "[WARN ]: "
-// Local macro for prefix error msg
-#define LOG_ERROR_PREFIX_MSG "[ERROR]: "
+eLogLevel_t Logger::log_lvl = LOG_INFO;
 
-namespace
-{
-// Local HardwareSerial port where is logging
-HardwareSerial *log_serial;
-// Global Log level for any logging
-eLogLevel_t logLvl = LOG_WARN;
+Logger::Logger()
+    : port(NULL) {}
 
-// Local auxiliar function to print msg to log port
-void internal_log(String msg, eLogLevel_t log_lv, bool printLn = false)
+Logger &Logger::getInstance()
 {
-  if (log_lv >= logLvl)
+  static Logger *instance;
+  if (instance == NULL)
   {
-    printLn ? log_serial->println(msg) : log_serial->print(msg);
+    instance = new Logger();
   }
-}
-}; // namespace
-
-void log_port(HardwareSerial &serial)
-{
-  log_serial = &serial;
+  return *instance;
 }
 
-void log_begin(uint32_t baudrate)
+size_t Logger::write(const uint8_t *buffer, size_t size)
 {
-  log_serial->begin(baudrate);
+  if (port == NULL)
+  {
+    return 0;
+  }
+  return port->write(buffer, size);
 }
 
-void log_begin(HardwareSerial &serial, uint32_t baudrate)
+size_t Logger::write(uint8_t _byte)
 {
-  log_begin(serial, baudrate, logLvl);
+  if (port == NULL)
+  {
+    return 0;
+  }
+  return port->write(_byte);
 }
 
-void log_begin(HardwareSerial &serial, uint32_t baudrate, eLogLevel_t level)
+void Logger::begin(uint32_t baudrate)
 {
-  log_port(serial);
-  log_begin(baudrate);
-  log_level(level);
+  if (port == NULL)
+  {
+    return;
+  }
+  port->begin(baudrate);
 }
 
-void log_level(eLogLevel_t level)
+void Logger::end()
 {
-  logLvl = level;
+  if (port == NULL)
+  {
+    return;
+  }
+  port->end();
 }
 
-void log(String msg)
+void Logger::setPort(HardwareSerial &_port)
 {
-  internal_log(msg, LOG_MASTER);
+  if (port != NULL)
+  {
+    port->end();
+  }
+  port = &_port;
 }
 
-void log(String msg, eLogLevel_t level)
+eLogLevel_t Logger::logLevel() const
 {
-  internal_log(msg, level);
+  return Logger::log_lvl;
 }
 
-void logln(String msg)
+void Logger::setLogLevel(const eLogLevel_t &_lvl)
 {
-  internal_log(msg, LOG_MASTER, true);
-}
-
-void logln(String msg, eLogLevel_t level)
-{
-  internal_log(msg, level, true);
-}
-
-void log_d(String msg)
-{
-  logln(LOG_DEBUG_PREFIX_MSG + msg, LOG_DEBUG);
-}
-
-void log_i(String msg)
-{
-  logln(LOG_INFO_PREFIX_MSG + msg, LOG_INFO);
-}
-
-void log_w(String msg)
-{
-  logln(LOG_WARN_PREFIX_MSG + msg, LOG_WARN);
-}
-
-void log_e(String msg)
-{
-  logln(LOG_ERROR_PREFIX_MSG + msg, LOG_ERROR);
+  Logger::log_lvl = _lvl;
 }
