@@ -33,7 +33,7 @@ typedef enum
 String GetStringLogLevel(eLogLevel_t log_lv);
 
 // [Interface] Provides an interface to use a logger with log levels
-struct ILogger : private Print
+struct ILogger : public Print
 {
 // [Virtual Method] Starts the log port output
   virtual void begin(uint32_t) = 0;

@@ -26,15 +26,14 @@ private:
 // [Static Attribute] Global log level
   static eLogLevel_t log_lvl;
   
-protected:
+public:
+// [Static Method] Gets an reference to the singleton instance of Logger
+  static Logger &getInstance();
+
 // [Override Method] Implements buffer writing into port
   size_t write(const uint8_t *buffer, size_t size) override;
 // [Override Method] Implements data writting into port
   size_t write(uint8_t _byte) override;
-
-public:
-// [Static Method] Gets an reference to the singleton instance of Logger
-  static Logger &getInstance();
 
 // [Public Method] Begins serial communication
   void begin(uint32_t) override;
