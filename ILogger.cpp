@@ -16,7 +16,7 @@ String GetStringLogLevel(eLogLevel_t log_lv) {
   case LOG_INFO: return LOG_INFO_PREFIX_MSG;
   case LOG_WARN: return LOG_WARN_PREFIX_MSG;
   case LOG_ERROR: return LOG_ERROR_PREFIX_MSG;
-  default: return "";
+  default: return "[     ]: ";
   }
 }
 
@@ -102,11 +102,5 @@ size_t ILogger::log(double msg, eLogLevel_t logLvl, int base)
 
 size_t ILogger::log(const Printable &msg, eLogLevel_t logLvl)
 {
-  if (logLvl >= this->logLevel())
-  {
-    size_t r = this->print(GetStringLogLevel(logLvl));
-    r += this->println(msg);
-    return r;
-  }
-  return 0;
+  return this->log_write<const Printable &>(msg, logLvl);
 }
