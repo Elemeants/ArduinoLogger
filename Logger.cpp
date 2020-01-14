@@ -69,3 +69,12 @@ void Logger::setLogLevel(const eLogLevel_t &_lvl)
 {
   Logger::log_lvl = _lvl;
 }
+
+void Logger::flush()
+{
+  if (port == NULL)
+  {
+    return;
+  }
+  port->flush();
+}
