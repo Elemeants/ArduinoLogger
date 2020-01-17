@@ -46,7 +46,7 @@ public:
 // [Public Setter] Sets the log level
   void setLogLevel(const eLogLevel_t &) override;
 // [Public Method] Flush implementation
-  void flush() override;
+  void flush();
 // [Destructor]
   ~Logger() {}
 };
