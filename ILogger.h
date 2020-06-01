@@ -44,6 +44,32 @@ const __FlashStringHelper *GetStringLogLevel(eLogLevel_t log_lv);
 // [Interface] Provides an interface to use a logger with log levels
 struct ILogger : public Print
 {
+private:
+  const char *prefix;
+  // [Private Method] Generic internal log for public log methods
+  template <typename T>
+  size_t log_write(T msg, eLogLevel_t logLvl);
+  // [Private Method] Generic internal log for public log methods
+  template <typename T>
+  size_t log_write(T msg, eLogLevel_t logLvl, int);
+
+protected:
+  void printPrefix()
+  {
+    if (prefix)
+    {
+      this->print(F("[ "));
+      this->print(prefix);
+      this->print(F(" ]"));
+    }
+  }
+
+public:
+  virtual void setPrefix(const char *_prefix)
+  {
+    prefix = _prefix;
+  }
+
   // [Virtual Method] Starts the log port output
   virtual void begin(uint32_t) = 0;
   // [Virtual Method] Ends the log port output
@@ -76,14 +102,6 @@ struct ILogger : public Print
   virtual size_t log(double, eLogLevel_t, int = 2);
   // [Public Method] Logs an message line
   virtual size_t log(const Printable &, eLogLevel_t);
-
-private:
-  // [Private Method] Generic internal log for public log methods
-  template <typename T>
-  size_t log_write(T msg, eLogLevel_t logLvl);
-  // [Private Method] Generic internal log for public log methods
-  template <typename T>
-  size_t log_write(T msg, eLogLevel_t logLvl, int);
 };
 
 #endif // !INTEFACE_LOGGER_H

@@ -22,6 +22,7 @@ size_t ILogger::log_write(T msg, eLogLevel_t logLvl)
 {
   if (logLvl >= this->logLevel())
   {
+    this->printPrefix();
     size_t r = this->print(GetStringLogLevel(logLvl));
     r += this->println(msg);
     return r;
@@ -34,8 +35,9 @@ size_t ILogger::log_write(T msg, eLogLevel_t logLvl, int base)
 {
   if (logLvl >= this->logLevel())
   {
+    this->printPrefix();
     size_t r = this->print(GetStringLogLevel(logLvl));
-    r += this->println(msg);
+    r += this->println(msg, base);
     return r;
   }
   return 0;
